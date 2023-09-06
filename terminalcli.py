@@ -45,7 +45,7 @@ def main():
     message = entry.get().strip()
 
     # Ouvre une connexion au serveur
-    connection = asyncio.open_connection("localhost", 8080)
+    connection = asyncio.open_connection("localhost", 8083)
     connections.append(connection)
 
     # Envoie le message au serveur

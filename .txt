@@ -5,6 +5,20 @@ import asyncio
 import sqlite3
 
 
+print ("\n")
+print ("CLI START")
+print ("\n")
+print (" (              (       *  ")         
+print (" )\ )    (      )\ )  (  `       )")  
+print ("(()/(    )\    (()/(  )\))(   ( /(")  
+print (" /(_))((((_)(   /(_))((_)()\  )\())") 
+print ("(_))_  )\ _ )\ (_))  (_()((_)((_)\ ")  
+print (" |   \ (_)_\(_)| |   |  \/  | / (_)") 
+print (" | |) | / _ \  | |__ | |\/| | | |  ") 
+print (" |___/ /_/ \_\ |____||_|  |_| |_| ")
+
+
+
 def send_message(message):
     client_socket.send(message.encode())
 
@@ -25,11 +39,11 @@ def receive_messages():
         db.commit()
 
         # Affiche le message dans la fenêtre tk
-        entry.insert("end", message + "\n")
+        root.insert("end", message + "\n")
 
 
 host = "localhost"
-port = 8083
+port = 8080
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((host, port))
@@ -58,20 +72,17 @@ entry = tk.Entry(root)
 def on_enter_pressed(event):
     global entry
 
-    message = entry.get().strip() + "\n"
+    message = entry.get().strip()
 
     # Envoie le message au serveur
     send_message(message)
     entry.delete(0, tk.END)
-    entry.focus_set()
-
-entry.bind("<Return>", on_enter_pressed)
 
 # Place les widgets sur la fenêtre
 entry.pack(fill="both", expand=True)
 
 # Place le curseur en haut à gauche
-entry.focus_set()
+entry.focus()
 
 root.geometry("800x600")
 

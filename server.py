@@ -2,7 +2,7 @@ import socket
 import threading
 import asyncio
 
-
+print ("\n")
 print (" (              (       *  ")         
 print (" )\ )    (      )\ )  (  `       )")  
 print ("(()/(    )\    (()/(  )\))(   ( /(")  
@@ -11,14 +11,16 @@ print ("(_))_  )\ _ )\ (_))  (_()((_)((_)\ ")
 print (" |   \ (_)_\(_)| |   |  \/  | / (_)") 
 print (" | |) | / _ \  | |__ | |\/| | | |  ") 
 print (" |___/ /_/ \_\ |____||_|  |_| |_| ")
+print ("\n")
 
 
 
 
 host = "localhost"
-port = 8080
+port = 8083
 
 print(f"Running at port {port}")
+print ("\n")
 
 
 
@@ -44,7 +46,7 @@ def broadcast_message(sender_socket, message):
 
 def handle_client_connection(client_socket):
    
-    client_socket.send("Entrez votre nom d'utilisateur: ".encode())
+    client_socket.send("".encode())
     username = client_socket.recv(1024).decode()
 
     users[client_socket] = username
