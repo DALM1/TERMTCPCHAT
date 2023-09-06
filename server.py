@@ -17,7 +17,7 @@ print ("\n")
 
 
 host = "localhost"
-port = 8083
+port = 8081
 
 print(f"Running at port {port}")
 print ("\n")
@@ -46,7 +46,7 @@ def broadcast_message(sender_socket, message):
 
 def handle_client_connection(client_socket):
    
-    client_socket.send("".encode())
+    client_socket.send(" -".encode())
     username = client_socket.recv(1024).decode()
 
     users[client_socket] = username
@@ -61,7 +61,7 @@ def handle_client_connection(client_socket):
             message = client_socket.recv(1024)
             if message:
                
-                broadcast_message(client_socket, f"{username}: {message}".encode())
+                broadcast_message(client_socket, f" {username}: {message}".encode())
             else:
                
                 if client_socket in clients:

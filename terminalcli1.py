@@ -25,11 +25,15 @@ def receive_messages():
         db.commit()
 
         # Affiche le message dans la fenêtre tk
-        entry.insert("end", message + "\n")
+        message = message.rstrip("\t").rstrip("\n")
+        message = message.encode("utf-8")
+        for line in message.split(b"\n"):
+            entry.insert("end", line + b"\n" + b" " * 10)
+            entry.update()
 
 
 host = "localhost"
-port = 8083
+port = 8081
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((host, port))

@@ -25,7 +25,9 @@ def receive_messages():
         db.commit()
 
         # Affiche le message dans la fenêtre tk
-        entry.insert("end", message + "\n")
+        message = message + "\n"
+        entry.insert("end", message)
+        entry.focus_set()
 
 
 host = "localhost"
