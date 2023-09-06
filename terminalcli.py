@@ -3,11 +3,14 @@ import tkinter as tk
 
 root = tk.Tk()
 
+messages = []
+
+connections = []
+
 async def send_messages_async(message):
   """Envoi un message au serveur."""
   # Ouvre une connexion au serveur
-  connections = await asyncio.gather(
-      *[asyncio.open_connection("localhost", 8080) for message in messages])
+  connection = await asyncio.open_connection("localhost", 8080)
 
   # Décompose les tuples de retour de la fonction asyncio.gather()
   stream_readers, stream_writers = zip(*connections)
@@ -21,7 +24,7 @@ async def send_messages_async(message):
     await stream_writer.drain()
 
   # Attend les réponses du serveur
-  data = await asyncio.gather(*[stream_reader.readuntil(b"\n") for stream_reader in stream_readers])
+  data = await asyncio.gather(*[stream_reader.readuntil(b"\n") for stream_reader in stream_writers])
 
   # Affiche les réponses du serveur
   for i, message in enumerate(messages):
@@ -31,13 +34,25 @@ async def send_messages_async(message):
   await asyncio.gather(*[stream_writer.close() for stream_writer in stream_writers])
 
 
-async def main():
+def main():
   """Créer une zone de texte pour saisir le message et l'envoyer au serveur."""
   # Crée une zone de texte pour saisir le message
   entry = tk.Entry(root)
 
   # attache un écouteur d'événement à la zone de texte pour envoyer le message lorsque la touche `Enter` est pressée
-  entry.bind("<Return>", lambda event: send_messages_async(entry.get().strip().encode("utf-8")))
+
+  def on_enter_pressed(event):
+    message = entry.get().strip()
+
+    # Ouvre une connexion au serveur
+    connection = asyncio.open_connection("localhost", 8080)
+    connections.append(connection)
+
+    # Envoie le message au serveur
+    asyncio.run(send_messages_async(message.strip().encode("utf-8")))
+    entry.delete(0, tk.END)
+
+  entry.bind("<Return>", on_enter_pressed)
 
   # Place les widgets sur la fenêtre
   entry.pack()
