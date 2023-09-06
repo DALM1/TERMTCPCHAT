@@ -16,28 +16,30 @@ def main():
   # Lance la boucle d'événements
   asyncio.run(root.mainloop())
 
-async def send_message(message=None):
-  # Envoie le message au serveur
-  connection = await asyncio.open_connection("localhost", 8080)
+async def send_messages(messages):
+  # Envoie les messages au serveur
+  connections = await asyncio.gather(*[asyncio.open_connection("localhost", 8080) for message in messages])
 
-  # Décompose le tuple de retour de la fonction asyncio.open_connection()
-  stream_reader, stream_writer = connection
+  # Décompose les tuples de retour de la fonction asyncio.gather()
+  stream_readers, stream_writers = zip(*connections)
 
-  # Convertit le message en bytes
-  message_bytes = asyncio.coalesce(message.encode("utf-8"), b"")
+  # Convertit les messages en bytes
+  message_bytes = [message.encode("utf-8") for message in messages]
 
-  # Envoie le message au serveur en utilisant le StreamWriter
-  await stream_writer.write(message_bytes)
-  await stream_writer.drain()
+  # Envoie les messages au serveur en utilisant les StreamWriters
+  await asyncio.gather(*[stream_writer.write(message_bytes[i]) for i, stream_writer in enumerate(stream_writers)])
+  await asyncio.gather(*[stream_writer.drain() for stream_writer in stream_writers])
 
-  # Attend la réponse du serveur
-  data = await stream_reader.readuntil(b"\n")
+  # Attend les réponses du serveur
+  data = await asyncio.gather(*[stream_reader.readuntil(b"\n") for stream_reader in stream_readers])
 
-  # Affiche la réponse du serveur
-  print(data.decode())
+  # Affiche les réponses du serveur
+  for i, message in enumerate(messages):
+    print(data[i].decode())
 
-  # Ferme le StreamWriter
-  await stream_writer.close()
+  # Ferme les StreamWriters
+  await asyncio.gather(*[stream_writer.close() for stream_writer in stream_writers])
+
 
 if __name__ == "__main__":
   asyncio.run(main())
