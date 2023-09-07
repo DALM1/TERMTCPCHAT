@@ -25,10 +25,15 @@ def receive_messages():
         db.commit()
 
         # Affiche le message dans la fenêtre tk
-        message = message.rstrip("\t").rstrip("\n")
+        message = message.rstrip("\t").rstrip(" ")
         message = message.encode("utf-8")
-        for line in message.split(b"\n"):
-            entry.insert("end", line + b"\n" + b" " * 10)
+        lines = message.split(b"\n")
+
+        # Redimensionne la zone de texte à la taille du texte
+        entry.config(width=max(len(line) for line in lines))
+
+        for line in lines:
+            entry.insert("end", line + b"\n")
             entry.update()
 
 
@@ -62,7 +67,7 @@ entry = tk.Entry(root)
 def on_enter_pressed(event):
     global entry
 
-    message = entry.get().strip() + "\n"
+    message = entry.get().strip() + " "
 
     # Envoie le message au serveur
     send_message(message)

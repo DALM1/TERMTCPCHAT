@@ -68,7 +68,7 @@ def handle_client_connection(client_socket):
                     clients.remove(client_socket)
                 if client_socket in users:
                     username = users[client_socket]
-                    broadcast_message(client_socket, f"{username} a quitté le chat".encode())
+                    broadcast_message(client_socket, f"{username} a quitte le chat".encode())
                     del users[client_socket]
                 client_socket.close()
                 break
@@ -78,7 +78,7 @@ def handle_client_connection(client_socket):
                 clients.remove(client_socket)
                 if client_socket in users:
                     username = users[client_socket]
-                    broadcast_message(client_socket, f"{username} a quitté le chat".encode())
+                    broadcast_message(client_socket, f"{username} a quitte le chat".encode())
                     del users[client_socket]
             client_socket.close()
             break
@@ -90,7 +90,7 @@ try:
     while True:
        
         client_socket, address = server_socket.accept()
-        print(f"Connexion acceptée de {address[0]}:{address[1]}")
+        print(f"Connexion acceptee de {address[0]}:{address[1]}")
 
         
         thread = threading.Thread(target=handle_client_connection, args=(client_socket,))
@@ -98,7 +98,7 @@ try:
         thread.start()
 
 except KeyboardInterrupt:
-    print("Arrêt demandé, fermeture des connexions...")
+    print("Arrêt demande, fermeture des connexions...")
 
 
     for client_socket in clients:
